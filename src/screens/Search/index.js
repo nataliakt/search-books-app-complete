@@ -4,6 +4,7 @@ import api from '../../services/api';
 import { View, Text, TextInput, SafeAreaView, FlatList, TouchableOpacity, Image, Linking } from 'react-native';
 
 import styles from './styles';
+import debounceValue from '../../hooks/debounce';
 
 const renderBooks = (books) => {
   if (!books || books.length == 0) 
@@ -41,19 +42,33 @@ const Search = () => {
   const [ books, setBooks ] = useState([]);
   const [ loading, setLoading ] = useState(false);
   const [ size, setSize ] = useState(0);
+  const [ query, setQuery ] = useState("");
 
-  const loadBooks = async (query) => {
-    let books = [];
-    let size = 0;
-    if (query) {
-      const response = await api.get('volumes', {params: {q: query}});
-      books = response.data.items;
-      size = response.data.totalItems;
-    }
+  const debouncedQuery = debounceValue(query, 500);
+
+  useEffect(() => {
+    setLoading(true);
+    if (debouncedQuery) {
+      api.get('volumes', {
+        params: {
+          q: debouncedQuery
+        }
+      }).then((response) => {
+        const books = response.data.items;
+        const size = response.data.totalItems;
     
-    setBooks(books);
-    setSize(size);
-  }
+        setBooks(books);
+        setSize(size);
+        setLoading(false);
+      });
+    } else {
+      setBooks([]);
+      setSize(0);
+      setLoading(false);
+    }
+  }, [debouncedQuery]);
+
+  console.log(loading);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,7 +76,7 @@ const Search = () => {
         <View style={[styles.headerBar, styles.shadow]}>
           <Text style={styles.headerBarText}>Book Search</Text>
         </View>
-        <TextInput style={styles.search} onChangeText={query => loadBooks(query)} placeholder="Comece digirando aqui"/>
+        <TextInput style={styles.search} onChangeText={query => setQuery(query)} placeholder="Comece digirando aqui"/>
         { renderInfo(loading, size) }
       </View>
       { renderBooks(books) }

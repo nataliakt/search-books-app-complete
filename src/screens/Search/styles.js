@@ -1,9 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform, StatusBar } from 'react-native';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#eee',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
   },
   shadow: {
     shadowColor: "#000",
