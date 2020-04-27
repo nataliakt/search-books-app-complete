@@ -6,7 +6,7 @@ import { View, Text, TextInput, SafeAreaView, FlatList, TouchableOpacity, Image,
 import styles from './styles';
 import debounceValue from '../../hooks/debounce';
 
-const renderBooks = (books) => {
+const renderBooks = (books, pagination) => {
   if (!books || books.length == 0) 
     return <Text style={styles.empty}>Não encontramos nada para mostrar :(</Text>
 
@@ -14,7 +14,9 @@ const renderBooks = (books) => {
     style={styles.list}
     data={books}
     renderItem={renderBook}
-    keyExtractor={book => book.id} />
+    keyExtractor={book => book.id}
+    onEndReached={pagination}
+    onEndReachedThreshold={5} />
 }
 
 const renderBook = ({ item: book }) => {
@@ -43,32 +45,38 @@ const Search = () => {
   const [ loading, setLoading ] = useState(false);
   const [ size, setSize ] = useState(0);
   const [ query, setQuery ] = useState("");
+  const [ start, setStart ] = useState(0);
 
   const debouncedQuery = debounceValue(query, 500);
 
   useEffect(() => {
     setLoading(true);
+    setStart(0);
     if (debouncedQuery) {
-      api.get('volumes', {
-        params: {
-          q: debouncedQuery
-        }
-      }).then((response) => {
-        const books = response.data.items;
-        const size = response.data.totalItems;
-    
-        setBooks(books);
-        setSize(size);
-        setLoading(false);
-      });
+      requestApi(debouncedQuery, 0);
     } else {
       setBooks([]);
       setSize(0);
       setLoading(false);
     }
   }, [debouncedQuery]);
+  
+  const requestApi = (query, start) => {
+    api.get('volumes', {
+      params: {
+        q: query,
+        startIndex: start
+      }
+    }).then((response) => {
+      const booksResponse = response.data.items || [];
+      const sizeResponse = response.data.totalItems;
 
-  console.log(loading);
+      setBooks(start == 0 ? booksResponse : [...books, ...booksResponse]);
+      setSize(start == 0 ? sizeResponse : size);
+      setLoading(false);
+      setStart(start + 40);
+    });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,7 +87,7 @@ const Search = () => {
         <TextInput style={styles.search} onChangeText={query => setQuery(query)} placeholder="Comece digirando aqui"/>
         { renderInfo(loading, size) }
       </View>
-      { renderBooks(books) }
+      { renderBooks(books, () => requestApi(debouncedQuery, start)) }
     </SafeAreaView>
   );
 }
