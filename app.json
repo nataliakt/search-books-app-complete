@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Search Books",
+    "slug": "search-books",
     "platforms": [
       "ios",
       "android",
