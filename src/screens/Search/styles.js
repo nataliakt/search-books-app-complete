@@ -18,6 +18,7 @@ export default StyleSheet.create({
   },
   header: {
     backgroundColor: '#008E76',
+    paddingBottom: 12,
   },
   headerBar: {
     backgroundColor: '#00BFA5',
@@ -32,19 +33,26 @@ export default StyleSheet.create({
   },
   search: {
     height: 40,
-    margin: 12,
+    marginTop: 12,
+    marginHorizontal: 12,
     padding: 12,
     borderWidth: 1,
     borderRadius: 8,
     backgroundColor: '#fff',
     borderColor: '#747474',
   },
+  searchInfo: {
+    textAlign: 'center',
+    marginTop: 8,
+    color: '#fff'
+  },
   empty: {
     marginTop: 12,
     alignSelf: 'center',
+    color: '#292929'
   },
   list: {
-    paddingTop: 6,
+    paddingVertical: 6,
   },
   card: {
     backgroundColor: '#fff',
