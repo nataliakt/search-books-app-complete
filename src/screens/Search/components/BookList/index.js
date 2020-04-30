@@ -16,7 +16,6 @@ export default function({ loading, books, loadMore }) {
     renderItem={renderBook}
     keyExtractor={() => String(Date.now() * Math.random())}
     onEndReached={loadMore}
-    onEndReachedThreshold={0.2}
     />
 }
 
