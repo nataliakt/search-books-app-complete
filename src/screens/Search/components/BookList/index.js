@@ -4,7 +4,7 @@ import BookCard from '../BookCard';
 
 import { StyledFlatList, InfoText } from './styles';
 
-export default function({ loading, books, loadMore }) {
+export default function({ loading, books }) {
   if (loading)
     return <InfoText>Carregando...</InfoText>
 
@@ -16,7 +16,6 @@ export default function({ loading, books, loadMore }) {
       data={books}
       renderItem={renderBook}
       keyExtractor={() => String(Date.now() * Math.random())}
-      onEndReached={loadMore}
       />
   );
 }
