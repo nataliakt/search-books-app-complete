@@ -8,15 +8,6 @@ import QueryInfo from './components/QueryInfo';
 
 import { StyledSafeAreaView, ContainerView, HeaderView, SearchInput } from './styles';
 
-const debounce = (func, delay) => {
-  let timer = null;
-  return () => {
-    console.tron.log(timer);
-    clearTimeout(timer);
-    timer = setTimeout(func, delay);
-  }
-}
-
 export default function() {
   const [ books, setBooks ] = useState([]);
   const [ loading, setLoading ] = useState(false);
@@ -26,7 +17,7 @@ export default function() {
   useEffect(() => {
     setLoading(true);
     if (query) {
-      debouncedLoadBooks();
+      loadBooks();
     } else {
       setBooks([]);
       setSize(0);
@@ -47,8 +38,6 @@ export default function() {
     setSize(Math.ceil(Math.random() * 1000));
     setLoading(false);
   }
-
-  const debouncedLoadBooks = debounce(loadBooks, 500);
 
   return (
     <StyledSafeAreaView forceInset={{ top: 'always' }}>
