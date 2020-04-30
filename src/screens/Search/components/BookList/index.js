@@ -2,21 +2,23 @@ import React from 'react';
 
 import BookCard from '../BookCard';
 
-import { BookList, Info } from './styles';
+import { StyledFlatList, InfoText } from './styles';
 
 export default function({ loading, books, loadMore }) {
   if (loading)
-    return <Info>Carregando...</Info>
+    return <InfoText>Carregando...</InfoText>
 
   if (!books || books.length == 0) 
-    return <Info>Não encontramos nada para mostrar :(</Info>
+    return <InfoText>Não encontramos nada para mostrar :(</InfoText>
 
-  return <BookList 
-    data={books}
-    renderItem={renderBook}
-    keyExtractor={() => String(Date.now() * Math.random())}
-    onEndReached={loadMore}
-    />
+  return (
+    <StyledFlatList 
+      data={books}
+      renderItem={renderBook}
+      keyExtractor={() => String(Date.now() * Math.random())}
+      onEndReached={loadMore}
+      />
+  );
 }
 
 const renderBook = ({ item: book }) => <BookCard {...book} />

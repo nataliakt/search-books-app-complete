@@ -1,19 +1,19 @@
 import React from 'react';
 import { Linking } from 'react-native';
 
-import { BookCard, Content, Cover, InfoView, Title, Authors, Description } from './styles';
+import { TouchableCard, ContentView, CoverImage, InfoView, TitleText, AuthorsText, DescriptionText } from './styles';
 
 export default function({ title, authors, description, thumbnail, infoLink }) {
   return (
-    <BookCard onPress={() => Linking.openURL(infoLink)}>
-      <Content>
-        <Cover source={{ uri: thumbnail }} />
+    <TouchableCard onPress={() => Linking.openURL(infoLink)}>
+      <ContentView>
+        <CoverImage source={{ uri: thumbnail }} />
         <InfoView>
-          <Title>{title}</Title>
-          <Authors>{authors}</Authors>
-          <Description>{description?.split(" ").splice(0,30).join(" ")}...</Description>
+          <TitleText>{title}</TitleText>
+          <AuthorsText>{authors}</AuthorsText>
+          <DescriptionText>{description?.split(" ").splice(0,30).join(" ")}...</DescriptionText>
         </InfoView>
-      </Content>
-    </BookCard>
+      </ContentView>
+    </TouchableCard>
   )
 }

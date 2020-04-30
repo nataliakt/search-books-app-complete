@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { TitleBar, TitleBarText } from './styles';
+import { TitleBarView, TitleBarText } from './styles';
 
 export default function({ children }) {
   return (
-    <TitleBar>
+    <TitleBarView>
       <TitleBarText>{ children }</TitleBarText>
-    </TitleBar>
+    </TitleBarView>
   )
 }

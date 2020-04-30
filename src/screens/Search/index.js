@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-
 import debounceValue from '../../hooks/debounce';
+
 import TitleBar from '../../components/TitleBar';
 
+import BookList from './components/BookList';
 import QueryInfo from './components/QueryInfo';
 
-import { Content, Header, Search, Container } from './styles';
-import BookList from './components/BookList';
+import { StyledSafeAreaView, ContainerView, HeaderView, SearchInput } from './styles';
 
 export default function() {
   const [ books, setBooks ] = useState([]);
@@ -20,7 +20,6 @@ export default function() {
 
   useEffect(() => {
     setLoading(true);
-    setPage(1);
     if (debouncedQuery) {
       loadBooks(debouncedQuery, 1);
     } else {
@@ -38,31 +37,34 @@ export default function() {
       }
     });
 
-    let booksResponse = response.data.items || [];
-    const sizeResponse = response.data.totalItems;
+    const booksResponse = response.data.items || [];
 
     setBooks(page == 1 ? booksResponse : [...books, ...booksResponse]);
-    setSize(page == 1 ? sizeResponse : size);
+    setSize(page == 1 ? Math.ceil(Math.random() * 1000) : size);
     setPage(page + 1);
     setLoading(false);
   }
 
   return (
-    <Container forceInset={{ top: 'always' }}>
-      <Content>
-        <Header>
+    <StyledSafeAreaView forceInset={{ top: 'always' }}>
+      <ContainerView>
+        <HeaderView>
           <TitleBar>Book Search</TitleBar>
 
-          <Search 
+          <SearchInput 
             onChangeText={query => setQuery(query)} 
             placeholder="Comece digirando aqui"
             />
 
           <QueryInfo loading={loading} size={size} />
-        </Header>
+        </HeaderView>
         
-        <BookList loading={loading} books={books} loadMore={() => loadBooks(debouncedQuery, page)} />
-      </Content>
-    </Container>
+        <BookList 
+          loading={loading}
+          books={books}
+          loadMore={() => loadBooks(debouncedQuery, page)}
+          />
+      </ContainerView>
+    </StyledSafeAreaView>
   );
 }
